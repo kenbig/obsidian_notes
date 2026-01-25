@@ -136,3 +136,13 @@ $ nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --share IT --put-file /etc
 $ nxc smb 10.129.204.177 -u grace -p Inlanefreight01! --spider IT --regex .
 ```
 %% list all files and directories in the IT share %%
+
+```
+$ nxc smb 10.129.203.121 -u grace -p 'Inlanefreight01!' -M spider_plus -o EXCLUDE_DIR=IPC$,print$,NETLOGON,SYSVOL
+```
+%% list all files accessible to the user %%
+
+```
+$ nxc smb 10.129.204.177 -u grace -p 'Inlanefreight01!' -M spider_plus -o EXCLUDE_DIR=IPC$,print$,NETLOGON,SYSVOL READ_ONLY=false
+```
+%% if you don't want to mount the share but would like to quickly list all files in a share %%
