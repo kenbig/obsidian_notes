@@ -132,3 +132,7 @@ $ nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --share IT --put-file /etc
 ```
 %% add file to a shared folder %%
 
+```
+$ nxc smb 10.129.204.177 -u grace -p Inlanefreight01! --spider IT --regex .
+```
+%% list all files and directories in the IT share %%
