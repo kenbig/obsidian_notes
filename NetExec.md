@@ -116,3 +116,5 @@ $ hashcat -m 13100 kerberoasting.out /usr/share/wordlists/rockyou.txt
 $  nxc smb 10.129.203.121 -u grace -p Inlanefreight01! --spider IT --pattern txt
 ```
 %%  spider to further enumerate shares and regex or pattern option for searching for files on the shares %%
+
+
