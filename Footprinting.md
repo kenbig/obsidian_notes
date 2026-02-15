@@ -40,4 +40,30 @@ $ dig any inlanefreight.htb @10.129.14.128
 ```
 %% We can use the option ANY to view all available records. This will cause the server to show us all available entries that it is willing to disclose. %%
 
+```
+$ dig axfr inlanefreight.htb @10.129.14.128
+```
+%% If the administrator used a subnet for the allow-transfer option for testing purposes or as a workaround solution or set it to any, everyone would query the entire zone file at the DNS server. In addition, other zones can be queried, which may even show internal IP addresses and hostnames. %%
+
+```
+$ dnsenum --dnsserver 10.129.42.195 --enum -p 0 -s 0 -o subdomains.txt -f /usr/share/seclists/Discovery/DNS/fierce-hostlist.txt dev.inlanefreight.htb --threads 200
+```
+%% brute force subdomain, have to be able to do a zone transfer of the domain for it to work %%
+### SMTP
+
+```
+$ telnet 10.129.14.128 25
+```
+%% connect to the SMTP server when connected you can use vrfy command to enumerate users. other commands include MAIL FROM, RCPT TO, DATA %%
+
+```
+$ sudo nmap 10.129.14.128 -p25 --script smtp-open-relay -v
+```
+%% use nmap to identify target SMTP server as an open relay using 16 different tests %%
+
+```
+$ smtp-user-enum -M VRFY -U footprinting-wordlist.txt -t 10.129.42.195 -w 15 -v
+```
+%% for enumerating users if you have an open smtp port %%
+
 
