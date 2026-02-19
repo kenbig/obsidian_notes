@@ -67,3 +67,42 @@ $ smtp-user-enum -M VRFY -U footprinting-wordlist.txt -t 10.129.42.195 -w 15 -v
 %% for enumerating users if you have an open smtp port %%
 
 
+### IMAP/POP3
+```
+$ sudo nmap 10.129.14.128 -sV -p110,143,993,995 -sC
+```
+%% footprinting the imap/pop3 service %%
+
+```
+$ curl -k 'imaps://10.129.14.128' --user user:p4ssw0rd
+```
+%% we can login directly to the mail server if you have username/password %%
+
+```
+$ openssl s_client -connect 10.129.14.128:pop3s
+```
+%% interact with POP3 server over SSL %%
+
+```
+$ openssl s_client -connect 10.129.14.128:imaps
+```
+%% interact with imaps server over SSL %%
+
+### SNMP
+```
+$ snmpwalk -v2c -c public 10.129.14.128
+```
+%% footprint snmp service, note that version 1,2c does not require authentication -c represents community but at times can be unknown%%
+
+```
+$ sudo apt install onesixtyone
+$ onesixtyone -c /opt/useful/seclists/Discovery/SNMP/snmp.txt 10.129.14.128
+```
+%%  If we do not know the community string, we can use onesixtyone and SecLists wordlists to identify these community strings. %%
+
+```
+$ sudo apt install braa
+$ braa <community string>@<IP>:.1.3.6.*
+$ braa public@10.129.14.128:.1.3.6.*
+```
+%% Once we know a community string, we can use it with braa to brute-force the individual OIDs and enumerate the information behind them. %%
