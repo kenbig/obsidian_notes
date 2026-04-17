@@ -43,3 +43,41 @@ $ which python
 $ python -c 'import pty; pty.spawn("/bin/sh")' 
 ```
 %% use which python to check if python is installed then the next python command to spawn a shell if you get a non-tty shell %%
+
+## Spawning Interactive Shells (if python is not installed on the system)
+```
+$ /bin/sh -i
+```
+%% spawn interactive shell %%
+
+```
+$ perl -e 'exec "/bin/sh";'
+$ ruby: exec "/bin/sh"
+$ lua: os.execute('/bin/sh')
+$ awk 'BEGIN {system("/bin/sh")}'
+$ find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
+$ find . -exec /bin/sh \; -quit
+$ vim -c ':!/bin/sh'
+```
+%% spawn interactive shell dependent on language available on system %%
+
+```
+$ ls -la <path/to/fileorbinary>
+```
+%%  list the file properties and permissions our account has over any given file or binary %%
+
+```
+$ sudo -l
+Matching Defaults entries for apache on ILF-WebSrv:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User apache may run the following commands on ILF-WebSrv:
+    (ALL : ALL) NOPASSWD: ALL
+```
+%% The sudo -l command above will need a stable interactive shell to run. If you are not in a full shell or sitting in an unstable shell, you may not get any return from it.  %%
+
+```
+
+```
+
