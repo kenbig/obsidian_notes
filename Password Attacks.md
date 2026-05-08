@@ -22,3 +22,148 @@ $ hashid -j 193069ceb0461e1d40d216e32c79c704
 %% using hashid command to identify hash type %%
 
 ### Hashcat
+```
+$ hashcat -a 0 -m 0 <hashes> [wordlist, rule, mask, ...]
+```
+%% -a is used to specify the attack mode,  -m is used to specify the hash type, etc %%
+
+```
+$ hashid -m '$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1'
+```
+%% hashid -m to identify hashcat hash type %%
+
+```
+$ hashcat -a 0 -m 0 e3e3ec5831ad5e7288241960e5d4fdb8 /usr/share/wordlists/rockyou.txt
+```
+%% -a 0 represents a dictionary attack which uses wordlist as input and -m 0 is the identified hash type in this case MD5 %%
+
+```
+$ hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule
+```
+%% you can add a ruleset with -r whichi modifies the password on top of wordlist %%
+
+```
+$ hashcat -a 3 -m 0 1e293d6912d074c0fd15844d803400dd '?u?l?l?l?l?d?s'
+```
+%% Mask attack(-a 3) is a type of brute-force attack in which the keyspace is explicitly defined by the user. For example, if we know that a password is eight characters long, rather than attempting every possible combination, we might define a mask that tests combinations of six letters followed by two numbers by using characters at the end %%
+
+```
+$ cewl https://www.inlanefreight.com -d 4 -m 6 --lowercase -w inlane.wordlist
+$ wc -l inlane.wordlist
+```
+%% use CeWL to scan potential words from a company's website and save them in a separate list., -d represents the depth to spider, -m minimum length of the word, storage of found words in lowercase --lowercase and -w for file where we want to store the results. %%
+
+```
+$ hashcat --stdout -a 1 markwhitepass.txt markwhitepass.txt > combined_wordlist.txt
+```
+%% using hashcat to create a combined wordlist with 2 wordlist inputs %%
+
+```
+$ awk 'length >= 12' combined_wordlist.txt > mark_wordlist.txt
+```
+%% create a wordlist with at least 12 characters %%
+
+```
+$ hashcat --force password.list -r custom.rule --stdout | sort -u > mut_password.list
+```
+%% hashcat create a wordlist based on a custom rule %%
+
+### SSH Keys
+```
+$ grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2>/dev/null
+```
+%% search for values that begin with '-----BEGIN [...SNIP...] PRIVATE KEY-----' %%
+
+```
+$ ssh-keygen -yf ~/.ssh/id_ed25519 
+```
+%%  how to tell if an SSH key is encrypted or not with ssh-keygen %%
+
+```
+$ ssh2john.py SSH.private > ssh.hash
+$ john --wordlist=rockyou.txt ssh.hash
+```
+%%  using Python script ssh2john.py to acquire the corresponding hash for an encrypted SSH key, and then use JtR to try and crack it %%
+
+```
+$ john ssh.hash --show
+```
+%% view resulting hash %%
+
+```
+$ office2john.py Protected.docx > protected-docx.hash
+$ john --wordlist=rockyou.txt protected-docx.hash
+$ john protected-docx.hash --show
+$ pdf2john.py PDF.pdf > pdf.hash
+$ john --wordlist=rockyou.txt pdf.hash
+$ john pdf.hash --show
+```
+%% crack password-protected word and pdf docs %%
+
+```
+$ curl -s https://fileinfo.com/filetypes/compressed | html2text | awk '{print tolower($1)}' | grep "\." | tee -a compressed_ext.txt
+```
+%%  get extension list %%
+
+```
+$ zip2john ZIP.zip > zip.hash
+$ cat zip.hash 
+$ john --wordlist=rockyou.txt zip.hash
+```
+%% cracking an encrypted zip file then use JtR to crack with desired password list %%
+
+```
+$ bitlocker2john -i Backup.vhd > backup.hashes
+$ grep "bitlocker\$0" backup.hashes > backup.hash
+$ cat backup.hash
+$ hashcat -a 0 -m 22100 'bitlockerhash' /usr/share/wordlists/rockyou.txt
+```
+%% bitlocker2john to crack bitlocker encrypted drive and hashcat or JtR to crack the hash %%
+
+```
+$ sudo apt-get install dislocker
+$ sudo mkdir -p /media/bitlocker
+$ sudo mkdir -p /media/bitlockermount
+```
+%% install dislocker to mount BitLocker-encrypted drives in Linux and create 2 folders to mount the VHD %%
+
+```
+$ sudo losetup -f -P Backup.vhd
+$ sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+$ sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+```
+%% We then use losetup to configure the VHD as loop device, decrypt the drive using dislocker, and finally mount the decrypted volume %%
+
+```
+$ cd /media/bitlockermount/
+$ ls -la
+$ sudo umount /media/bitlockermount
+$ sudo umount /media/bitlocker
+```
+%% analyse files on the mounted vhd file then once finished unmount %%
+
+### Network Services
+```
+$ netexec <proto> <target-IP> -u <user or userlist> -p <password or passwordlist>
+```
+%% nxc command %%
+
+```
+$ evil-winrm -i <target-IP> -u <username> -p <password>
+$ evil-winrm -i 10.129.42.197 -u user -p password
+```
+%%  evil-winrm command %%
+
+```
+$ hydra -L user.list -P password.list ssh://10.129.42.197
+$ hydra -L user.list -P password.list rdp://10.129.42.197
+$ hydra -L user.list -P password.list smb://10.129.42.197
+```
+%% using hydra to bruteforce with username and password list %%
+
+```
+$ netexec smb 10.129.42.197 -u "user" -p "password" --shares
+$ smbclient -U user \\\\10.129.42.197\\SHARENAME
+```
+%% netexec to list shares and smbclient to access share %%
+
