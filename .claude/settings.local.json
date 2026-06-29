@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(timedatectl status *)",
+      "Bash(sudo apt-get install -y ntp)",
+      "Bash(sudo systemctl enable ntp)",
+      "Bash(sudo systemctl start ntp)"
     ]
   }
 }
