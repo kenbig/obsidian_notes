@@ -520,3 +520,5 @@ c:\tools>powershell
 PS C:\tools> Enter-PSSession -ComputerName DC01
 ```
 %% runas /netonly prevents erasure of exisiting TGTs for the current logon session then from that windows execute Rubeus to request a new TGT with th eoption /ptt to import the ticket into our current session and connect to the DC using PowerShell Remoting. %%
+
+### Pass the Ticket (PtT) from Linux
