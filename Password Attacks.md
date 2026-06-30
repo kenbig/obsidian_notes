@@ -533,3 +533,8 @@ $ find / -name *keytab* -ls 2>/dev/null
 $ crontab -l
 ```
 %% searching for kerberos tickets saved as .ktc could be found in cron jobs as well.  If an administrator needs to run a script to interact with a Windows service that uses Kerberos, and if the keytab file does not have the .keytab extension, we may find the appropriate filename within the script. %%
+
+```
+$ env | grep -i krb5
+$ ls -la /tmp
+```
