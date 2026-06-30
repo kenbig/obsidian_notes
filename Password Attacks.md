@@ -526,4 +526,8 @@ PS C:\tools> Enter-PSSession -ComputerName DC01
 $ realm list
 $ ps -ef | grep -i "winbind\|sssd"
 ```
-%% check if l
+%% check if linux is domain joined %%
+
+```
+$ find / -name *keytab* -ls 2>/dev/null
+```
