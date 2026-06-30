@@ -20,23 +20,8 @@
               "icon": "lucide-file",
               "title": "NetExec"
             }
-          },
-          {
-            "id": "d6b4bb1ffe4d445b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "test com.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "test com"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -199,7 +184,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d6b4bb1ffe4d445b",
+  "active": "b4745488e4c2bef1",
   "lastOpenFiles": [
     "ADCS.md",
     "test com.md",
