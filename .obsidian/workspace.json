@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "test comm.md",
+                "file": "test com.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "test comm"
+              "title": "test com"
             }
           }
         ],
@@ -202,7 +202,7 @@
   "active": "d6b4bb1ffe4d445b",
   "lastOpenFiles": [
     "ADCS.md",
-    "test comm.md",
+    "test com.md",
     "Password Attacks.md",
     "Using the metasploit framework.md",
     "Shells & Payloads.md",
