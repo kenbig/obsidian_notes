@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "NetExec.md",
+                "file": "Password Attacks.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "NetExec"
+              "title": "Password Attacks"
             }
           }
         ]
@@ -184,10 +184,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b4745488e4c2bef1",
+  "active": "af61ccf500d1634f",
   "lastOpenFiles": [
-    "ADCS.md",
     "test com.md",
+    "ADCS.md",
     "Password Attacks.md",
     "Using the metasploit framework.md",
     "Shells & Payloads.md",
