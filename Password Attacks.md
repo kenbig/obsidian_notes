@@ -553,3 +553,7 @@ $ smbclient //dc01/carlos -k -c ls
 ```
 %% impersonating carlos using kinit then accessing shared folder as carlos %%
 
+```
+$ python3 /opt/keytabextract.py /opt/specialfiles/carlos.keytab
+```
+%% extracting keytab hashes with keytabextract then cracking the hashes to get the user's password %%
