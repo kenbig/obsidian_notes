@@ -19,3 +19,14 @@ $ history
 $ sudo -l
 ```
 %% check bash history and list user's privileges %%
+
+```
+$ ls -la /etc/cron.daily/
+```
+%% check cron jobs similar to scheduled tasks in windows also search for .conf files, and try reading /etc/shadow if readable for any hashes %%
+
+```
+$lsblk
+```
+
+
