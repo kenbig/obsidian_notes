@@ -28,5 +28,14 @@ $ ls -la /etc/cron.daily/
 ```
 $lsblk
 ```
+%% If you discover and can mount an additional drive or unmounted file system, you may find sensitive files, passwords, or backups that can be leveraged to escalate privileges. %%
 
+```
+$ find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null
+```
+%% discover which directories are writeable if you need to download tools to the system. You may discover a writeable directory where a cron job places files, which provides an idea of how often the cron job runs and could be used to elevate privileges if the script that the cron job runs is also writeable. %%
 
+```
+$ find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+```
+%% Are any scripts or configuration files world-writable? While altering configuration files can be extremely destructive, there may be instances where a minor modification can open up further access. Also, any scripts that are run as root using cron jobs can be modified slightly to append a command. %%
