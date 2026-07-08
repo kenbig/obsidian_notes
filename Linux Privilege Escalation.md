@@ -60,5 +60,11 @@ $ echo $PATH
 %% check out our current user's PATH. If PATH variable for a target user is misconfigured we may be able to leverage it to escalate privileges %%
 
 ```
+$ env
+```
+%% check out environment variables %%
 
 ```
+$ uname -a
+```
+%% check kernel version %%
