@@ -88,5 +88,11 @@ $ getent group sudo
 %%  The /etc/group file lists all of the groups on the system. We can then use the getent command to list members of any interesting groups. %%
 
 ```
+$ df -h
+$ cat /etc/fstab | grep -v "#" | column -t
+```
+%% check for mounted file systems. A mounted file system is one that is attached to a particular directory on the system and accessed through that directory. Second command is for checking for unmounted file systes which are ones no longer accessible on the system %%
+
+```
 
 ```
