@@ -82,3 +82,11 @@ $ cat /etc/group
 ```
 %% check for available gorups in /etc/grouip file showing us both the group name and assigned user names %%
 
+```
+$ getent group sudo
+```
+%%  The /etc/group file lists all of the groups on the system. We can then use the getent command to list members of any interesting groups. %%
+
+```
+
+```
