@@ -39,3 +39,26 @@ $ find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null
 $ find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
 ```
 %% Are any scripts or configuration files world-writable? While altering configuration files can be extremely destructive, there may be instances where a minor modification can open up further access. Also, any scripts that are run as root using cron jobs can be modified slightly to append a command. %%
+
+
+### Environment enumeration
+Commands to run when you encounter any linux distro:
+- whoami - what user are we running as
+- id - what groups does our user belong to?
+- hostname - what is the server named, can we gather anything from the naming convention?
+- ifconfig or ip a - what subnet did we land in, does the host have additional NICs in other subnets?
+- sudo -l - can our user run anything with sudo (as another user as root) without needing a password? This can sometimes be the easiest win and we can do something like sudo su and drop right into a root shell.
+
+```
+$ cat /etc/os-release
+```
+%% check what operating system and version is running %%
+
+```
+$ echo $PATH
+```
+%% check out our current user's PATH. If PATH variable for a target user is misconfigured we may be able to leverage it to escalate privileges %%
+
+```
+
+```
