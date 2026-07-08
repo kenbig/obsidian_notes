@@ -94,5 +94,7 @@ $ cat /etc/fstab | grep -v "#" | column -t
 %% check for mounted file systems. A mounted file system is one that is attached to a particular directory on the system and accessed through that directory. Second command is for checking for unmounted file systes which are ones no longer accessible on the system %%
 
 ```
-
+$ find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null | grep htb-student
+$ find / -type d -name ".*" -ls 2>/dev/null
 ```
+%% find all hidden files and directories respectively %%
