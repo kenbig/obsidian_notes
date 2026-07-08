@@ -70,4 +70,15 @@ $ lscpu
 $ cat /etc/shells
 $ cat /etc/fstab
 ```
-%% check kernel version, CPU type/version, shells available to us%%
+%% check kernel version, CPU type/version, shells available to us. mounted drives  for creds%%
+
+```
+$ grep "sh$" /etc/passwd
+```
+%% check which users have login shells then check each version for vunlerabilities %%
+
+```
+$ cat /etc/group
+```
+%% check for available gorups in /etc/grouip file showing us both the group name and assigned user names %%
+
