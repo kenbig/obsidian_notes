@@ -67,6 +67,7 @@ $ env
 ```
 $ uname -a
 $ lscpu
-$cat /etc/shells
+$ cat /etc/shells
+$ cat /etc/fstab
 ```
 %% check kernel version, CPU type/version, shells available to us%%
