@@ -98,3 +98,10 @@ $ find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null | grep htb-student
 $ find / -type d -name ".*" -ls 2>/dev/null
 ```
 %% find all hidden files and directories respectively %%
+
+```
+$ cat /etc/hosts
+$ lastlog
+$ w
+```
+%% 
