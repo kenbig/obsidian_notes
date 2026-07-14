@@ -110,4 +110,4 @@ $ history
 ```
 $ find / -type f \( -name *_hist -o -name *_history \) -exec ls -l {} \; 2>/dev/null
 ```
-%% 
+%% It's also a good idea to check for any cron jobs on the system. Cron jobs on Linux systems are similar to Windows scheduled tasks. They are often set up to perform maintenance and backup tasks. %%
