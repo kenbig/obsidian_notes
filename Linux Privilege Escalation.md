@@ -197,3 +197,9 @@ $ echo "" > --checkpoint=1
 $ sudo -l
 ```
 %% if you check tar command manual you notice that there is a checkpoint section that allows you to execute an EXEC action once we run the tar command. You can check sudo privileges after to confirm if the nopasswd executed successfully. %%
+
+### Escaping Restricted Shells
+```
+$ ls -l `pwd` 
+```
+%% as the word says using characters to execute commands that are restricted on the shell. e.g using ``,;,|etc
