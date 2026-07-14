@@ -105,4 +105,5 @@ $ lastlog
 $ w
 $ history
 ```
-%% 
+%% check hosts, user's last login,check if anyone else in the system with us with 'who' cmd, history command to check command history %%
+
