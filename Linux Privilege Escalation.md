@@ -103,5 +103,6 @@ $ find / -type d -name ".*" -ls 2>/dev/null
 $ cat /etc/hosts
 $ lastlog
 $ w
+$ history
 ```
 %% 
