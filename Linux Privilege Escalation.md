@@ -107,3 +107,7 @@ $ history
 ```
 %% check hosts, user's last login,check if anyone else in the system with us with 'who' cmd, history command to check command history %%
 
+```
+$ find / -type f \( -name *_hist -o -name *_history \) -exec ls -l {} \; 2>/dev/null
+```
+%% 
