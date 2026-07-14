@@ -124,5 +124,21 @@ $ find /proc -name cmdline -exec cat {} \; 2>/dev/null | tr " " "\n"
 
 ```
 $ apt list --installed | tr "/" " " | cut -d" " -f1,3 | sed 's/[0-9]://g' | tee -a installed_pkgs.list
+$ sudo -V
 ```
-%% 
+%% create a list of installed packages to start process of checking if there are any older packages or software installed that may have vulnerabilities . Check sudo version as well to help with this process.%%
+
+```
+$ ls -l /bin /usr/bin/ /usr/sbin/
+```
+%% at times there are no installed packages but you can check for binaries as well which can be run without installation. %%
+
+```
+$ for i in $(curl -s https://gtfobins.org/api.json | jq -r '.executables | keys[]'); do if grep -q "$i" installed_pkgs.list; then echo "Check for GTFO: $i";fi; done
+```
+%% GTFObins( https://gtfobins.org/)  provides an excellent platform that includes a list of binaries that can potentially be exploited to escalate our privileges on the target system. With the above oneliner, we can compare the existing binaries with the ones from GTFObins to see which binaries we should investigate later. %%
+
+```
+$ strace ping -c1 10.129.112.20
+```
+%%  We can use the diagnostic tool strace on Linux-based operating systems to track and analyze system calls and signal processing. It allows us to follow the flow of a program and understand how it accesses system resources, processes signals, and receives and sends data from the operating system. %%
