@@ -110,4 +110,19 @@ $ history
 ```
 $ find / -type f \( -name *_hist -o -name *_history \) -exec ls -l {} \; 2>/dev/null
 ```
+%% Sometimes we can also find special history files created by scripts or programs. This can be found, among others, in scripts that monitor certain activities of users and check for suspicious activities %%
+
+```
+$ ls -la /etc/cron.daily/
+```
 %% It's also a good idea to check for any cron jobs on the system. Cron jobs on Linux systems are similar to Windows scheduled tasks. They are often set up to perform maintenance and backup tasks. %%
+
+```
+$ find /proc -name cmdline -exec cat {} \; 2>/dev/null | tr " " "\n"
+```
+%% The proc filesystem (proc / procfs) is a particular filesystem in Linux that contains information about system processes, hardware, and other system information. It is the primary way to access process information and can be used to view and modify kernel settings. It can be used to look up system information such as the state of running processes, kernel parameters, system memory, and devices. %%
+
+```
+$ apt list --installed | tr "/" " " | cut -d" " -f1,3 | sed 's/[0-9]://g' | tee -a installed_pkgs.list
+```
+%% 
