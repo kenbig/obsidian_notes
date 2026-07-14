@@ -159,3 +159,20 @@ $ ps aux | grep root
 %% check services run by a user to look for other escalation paths %%
 
 ### Credential Hunting
+```
+$ grep 'DB_USER\|DB_PASSWORD' wp-config.php
+```
+%% The /var directory typically contains the web root for whatever web server is running on the host. The web root may contain database credentials or other types of credentials that can be leveraged to further access. %%
+
+```
+$  find / ! -path "*/proc/*" -iname "*config*" -type f 2>/dev/null
+```
+%%  The spool or mail directories, if accessible, may also contain valuable information or even credentials. It is common to find credentials stored in files in the web root (i.e. MySQL connection strings, WordPress configuration files).%%
+
+```
+$  ls ~/.ssh
+```
+%% It is also useful to search around the system for accessible SSH private keys. We may locate a private key for another, more privileged, user that we can use to connect back to the box with additional privileges. We may also sometimes find SSH keys that can be used to access other hosts in the environment. Whenever finding SSH keys check the known_hosts file to find targets.  %%
+
+
+### Path Abuse
