@@ -142,3 +142,20 @@ $ for i in $(curl -s https://gtfobins.org/api.json | jq -r '.executables | keys[
 $ strace ping -c1 10.129.112.20
 ```
 %%  We can use the diagnostic tool strace on Linux-based operating systems to track and analyze system calls and signal processing. It allows us to follow the flow of a program and understand how it accesses system resources, processes signals, and receives and sends data from the operating system. %%
+
+```
+$ find / -type f \( -name *.conf -o -name *.config \) -exec ls -l {} \; 2>/dev/null
+```
+%% Users can read almost all configuration files on a Linux operating system if the administrator has kept them the same. In addition, these files can contain sensitive information, such as keys and paths to files in folders that we cannot see. %%
+
+```
+$ find / -type f -name "*.sh" 2>/dev/null | grep -v "src\|snap\|share"
+```
+%% same as above scripts can contain sensitive information %%
+
+```
+$ ps aux | grep root
+```
+%% check services run by a user to look for other escalation paths %%
+
+### Credential Hunting
