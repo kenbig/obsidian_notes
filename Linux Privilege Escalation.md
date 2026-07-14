@@ -180,3 +180,10 @@ $  ls ~/.ssh
 $ echo $PATH
 ```
 %% PATH is an environment variable that specifies the set of directories where an executable can be located. An account's PATH variable is a set of absolute paths, allowing a user to type a command without specifying the absolute path to the binary. %%
+
+```
+$ PATH=.:${PATH}
+$ export PATH
+$ echo $PATH
+```
+%% if we had a malicious script in our current directory for example ls. and use path command to add our current directory to PATH variable then if we ran ls it would run the script in our current directory instead of the one in /bin/ls %%
