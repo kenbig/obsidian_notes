@@ -216,5 +216,10 @@ $ find / -user root -perm -6000 -exec ls -ldb {} \; 2>/dev/null
 %% The Set-Group-ID (setgid) permission is another special permission that allows us to run binaries as if we were part of the group that created them. %%
 
 ### GTFOBins
+The [[[GTFOBins](https://gtfobins.org/)]] project is a curated list of binaries and scripts that can be used by an attacker to bypass security restrictions. Each page details the program's features that can be used to break out of restricted shells, escalate privileges, spawn reverse shell connections, and transfer files.
 
+```
+$ sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
+```
+%% apt-get can be used to break out of restricted environments and spawn a shell by adding a Pre-Invoke command %%
 
