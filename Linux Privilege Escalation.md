@@ -202,4 +202,19 @@ $ sudo -l
 ```
 $ ls -l `pwd` 
 ```
-%% as the word says using characters to execute commands that are restricted on the shell. e.g using ``,;,|etc
+%% as the word says using characters to execute commands that are restricted on the shell. e.g using (;| etc) %%
+
+### Special Permissions
+```
+$ find / -user root -perm -4000 -exec ls -ldb {} \; 2>/dev/null
+```
+%% command to find the programs or scrips with the setuid permission set which allows a user to execute that program/scripts as another user mostly with elevated privileges . It may be possible to reverse engineer the program with the SETUID bit set, identify a vulnerability, and exploit this to escalate our privileges. %%
+
+```
+$ find / -user root -perm -6000 -exec ls -ldb {} \; 2>/dev/null
+```
+%% The Set-Group-ID (setgid) permission is another special permission that allows us to run binaries as if we were part of the group that created them. %%
+
+### GTFOBins
+
+
