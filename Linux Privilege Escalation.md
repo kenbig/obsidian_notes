@@ -258,4 +258,11 @@ $ lxc exec r00t /bin/sh
 $ docker run -v /root:/mnt -it ubuntu
 ```
 
+%% this command creates a new Docker instance with the /root directory on the host file system mounted as a volume. Once the container is started we are able to browse the mounted directory and retrieve or add SSH keys for the root user.  %%
 
+```
+$ id
+uid=1010(secaudit) gid=1010(secaudit) groups=1010(secaudit),4(adm)
+```
+
+%% Members of the adm group are able to read all logs stored in /var/log. This does not directly grant root access, but could be leveraged to gather sensitive data stored in log files or enumerate user actions and running cron jobs. %%
