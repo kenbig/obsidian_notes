@@ -266,3 +266,13 @@ uid=1010(secaudit) gid=1010(secaudit) groups=1010(secaudit),4(adm)
 ```
 
 %% Members of the adm group are able to read all logs stored in /var/log. This does not directly grant root access, but could be leveraged to gather sensitive data stored in log files or enumerate user actions and running cron jobs. %%
+
+### Capabilities
+```
+$ sudo setcap cap_net_bind_service=+ep /usr/bin/vim.basic
+```
+%% When capabilities are set for a binary, it means that the binary will be able to perform specific actions that it would not be able to perform without the capabilities. For example, if the cap_net_bind_service capability is set for a binary, the binary will be able to bind to network ports, which is a privilege usually restricted. %%
+
+```
+$ find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
+```
