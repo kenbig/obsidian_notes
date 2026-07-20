@@ -293,4 +293,9 @@ $ cat /etc/passwd | head -n1
 ```
 $ find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
 ```
-%% command to look for any writeable files or directories%%
+%% command to look for any writeable files or directories. If we found a writeable file .sh especially a cron job, we can add a reverse shell one liner to the script that is running%%
+
+```
+$ ./pspy64 -pf -i 1000
+```
+%% command-line tool used to view running processes without the need for root privileges. The -pf flag tells the tool to print commands and file system events and -i 1000 tells it to scan procfs every 1000ms (or every second) %%
