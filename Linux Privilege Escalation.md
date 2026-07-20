@@ -322,3 +322,8 @@ $ /tmp/docker -H unix:///app/docker.sock run --rm -d --privileged -v /:/hostsyst
 $ /tmp/docker -H unix:///app/docker.sock ps
 ```
 %% We can create our own Docker container that maps the host’s root directory (/) to the /hostsystem directory on the container. With this, we will get full access to the host system. Therefore, we must map these directories accordingly and use the main_app Docker image. %%
+
+```
+$ docker -H unix:///var/run/docker.sock run -v /:/mnt --rm -it ubuntu chroot /mnt bash
+```
+%% A case that can also occur is when the Docker socket is writable. Usually, this socket is located in /var/run/docker.sock. However, the location can understandably be different. Because basically, this can only be written by the root or docker group. If we act as a user, not in one of these two groups, and the Docker socket still has the privileges to be writable, then we can still use this case to escalate our privileges. %%
