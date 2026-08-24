@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux Privilege Escalation.md",
+                "file": "OSCP/Client-side Attacks.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux Privilege Escalation"
+              "title": "Client-side Attacks"
             }
           }
         ],
@@ -201,9 +201,10 @@
   },
   "active": "d6df6c68b0823f80",
   "lastOpenFiles": [
-    "Password Attacks.md",
     "Linux Privilege Escalation.md",
-    "Untitled",
+    "OSCP/Client-side Attacks.md",
+    "OSCP",
+    "Password Attacks.md",
     "test com.md",
     "ADCS.md",
     "Using the metasploit framework.md",
