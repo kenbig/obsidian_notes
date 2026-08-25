@@ -2,4 +2,5 @@
 ```
 $ exiftool -a -u *.pdf
 ```
-%% -a display 
+%% -a display duplicated tags and -u to display unknown tags %%
+
