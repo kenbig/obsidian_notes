@@ -9,6 +9,12 @@ $ wsgidav --host=0.0.0.0 --port=80 --auth=anonymous --root /home/kali/webdav/
 ```
 %% command to start WebDav share on host machine %%
 
+### Attack chain for final module (methodology)
+```
+nmap -sC -sV -p- <TARGET-IP>
+```
+%% start with port scanning %%
+
 
 
 
