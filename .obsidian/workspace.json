@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OSCP/Client-side Attacks.md",
+                "file": "OSCP/Information Gathering.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Client-side Attacks"
+              "title": "Information Gathering"
             }
           }
         ],
@@ -203,8 +203,9 @@
   },
   "active": "d6df6c68b0823f80",
   "lastOpenFiles": [
-    "Linux Privilege Escalation.md",
     "OSCP/Client-side Attacks.md",
+    "OSCP/Information Gathering.md",
+    "Linux Privilege Escalation.md",
     "OSCP",
     "Password Attacks.md",
     "test com.md",
