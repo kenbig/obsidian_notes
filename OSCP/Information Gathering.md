@@ -21,3 +21,8 @@ $ site:megacorpone.com filetype:txt
 $ site:megacorpone.com -filetype:html
 ```
 %% exclude html pages from search results %%
+
+```
+$ intitle:"index of" "parent directory" 
+```
+%% find pages that contain "index of" in the title and the words "parent directory" on the page %%
