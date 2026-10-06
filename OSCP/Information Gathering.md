@@ -1,4 +1,4 @@
-
+#### WHOIS
 
 ```
 $ whois megacorpone.com -h 192.168.50.251
@@ -10,3 +10,14 @@ $ whois 38.100.193.70 -h 192.168.50.251
 ```
 %% same as above but assuming we have IP address of website %%
 
+#### Google Hacking
+
+```
+$ site:megacorpone.com filetype:txt
+```
+%% include txt files for site %%
+
+```
+$ site:megacorpone.com -filetype:html
+```
+%% exclude html pages from search results %%
