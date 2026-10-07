@@ -79,3 +79,5 @@ $ dnsenum megacorpone.com
 $ nslookup -type=TXT info.megacorptwo.com 192.168.50.151
 ```
 %%  querying the 192.168.50.151 DNS server for any TXT record related to the info.megacorptwo.com host %%
+
+Netcat
