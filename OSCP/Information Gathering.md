@@ -80,4 +80,9 @@ $ nslookup -type=TXT info.megacorptwo.com 192.168.50.151
 ```
 %%  querying the 192.168.50.151 DNS server for any TXT record related to the info.megacorptwo.com host %%
 
-Netcat
+#### Netcat
+```
+$ nc -nvv -w 1 -z 192.168.50.152 3388-3390
+$ nc -nv -u -z -w 1 192.168.50.149 120-123
+```
+%% using netcat to do TCP and UDP port scan respectively  -w  1 for timeout, -z to specify zero-I/O, -u to specify UDP scan%%
