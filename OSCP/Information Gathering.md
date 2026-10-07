@@ -71,6 +71,11 @@ $ dnsrecon -d megacorpone.com -D ~/list.txt -t brt
 %% use the -d option to specify a domain name, -D to specify a file name containing potential subdomain strings, and -t to specify the type of enumeration to perform, in this case brt for brute force %%
 
 ```
+$ dnsenum megacorpone.com
+```
+%% dnsenum to automate DNS enumeration of megacorpone domain %%
+
+```
 $ nslookup -type=TXT info.megacorptwo.com 192.168.50.151
 ```
-%% 
+%%  querying the 192.168.50.151 DNS server for any TXT record related to the info.megacorptwo.com host %%
