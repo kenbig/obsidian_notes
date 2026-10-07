@@ -86,3 +86,25 @@ $ nc -nvv -w 1 -z 192.168.50.152 3388-3390
 $ nc -nv -u -z -w 1 192.168.50.149 120-123
 ```
 %% using netcat to do TCP and UDP port scan respectively  -w  1 for timeout, -z to specify zero-I/O, -u to specify UDP scan%%
+
+#### Nmap
+```
+$ sudo nmap -sU -sS 192.168.50.149
+```
+%% The UDP scan (-sU) can also be used in conjunction with a TCP SYN scan (-sS) to build a more complete picture of our target %%
+
+```
+$ nmap -sn 192.168.50.1-253
+```
+%% performing a network sweep with Nmap using the -sn option, the host discovery process consists of more than just sending an ICMP echo request. Nmap also sends a TCP SYN packet to port 443, a TCP ACK packet to port 80, and an ICMP timestamp request to verify whether a host is available. %%
+
+```
+$ nmap -v -sn 192.168.50.1-253 -oG ping-sweep.txt
+$ grep Up ping-sweep.txt | cut -d " " -f 2
+```
+%% do a more general scan then narrow down with grep to get the alive hosts %%
+
+```
+$ nmap -sT -A --top-ports=20 192.168.50.1-253 -oG top-port-sweep.txt
+```
+%%  we can also scan multiple IPs, probing for a short list of common ports. For example, let's conduct a TCP connect scan for the top 20 TCP ports with the --top-ports option and enable OS version detection, script scanning, and traceroute with -A %%
