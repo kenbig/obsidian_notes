@@ -26,3 +26,14 @@ $ site:megacorpone.com -filetype:html
 $ intitle:"index of" "parent directory" 
 ```
 %% find pages that contain "index of" in the title and the words "parent directory" on the page %%
+
+#### Github
+```
+$ owner:megacorpone path:users
+```
+%% search for repos belonging to megacorpone with "users" in filename %%
+
+```
+$ ./gitleaks-linux-amd64 -v -r=<github-link>
+```
+%% find any leaked secrets e.g password, keys, tokens etc %%
