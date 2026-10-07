@@ -108,3 +108,18 @@ $ grep Up ping-sweep.txt | cut -d " " -f 2
 $ nmap -sT -A --top-ports=20 192.168.50.1-253 -oG top-port-sweep.txt
 ```
 %%  we can also scan multiple IPs, probing for a short list of common ports. For example, let's conduct a TCP connect scan for the top 20 TCP ports with the --top-ports option and enable OS version detection, script scanning, and traceroute with -A %%
+
+```
+$ sudo nmap -O 192.168.50.14 --osscan-guess
+```
+%% -O option for OS Fingerprinting and --osscan-guess option to force Nmap to print the guessed result, even if is not fully accurate. %%
+
+```
+PS Test-NetConnection -Port 445 192.168.50.151
+```
+%% in windows if we can't install nmap, we can use LOLBAS command above to check if port open on target host %%
+
+```
+PS 1..1024 | % {echo ((New-Object Net.Sockets.TcpClient).Connect("192.168.50.151", $_)) "TCP port $_ is open"} 2>$null
+```
+%% We start by piping the first 1024 integer into a for-loop, which assigns the incremental integer value to the $_ variable. Then, we create a Net.Sockets.TcpClient object and perform a TCP connection against the target IP on that specific port, and if the connection is successful, it prompts a log message that includes the open TCP port. %%
