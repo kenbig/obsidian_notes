@@ -57,5 +57,20 @@ $ host -t txt megacorpone.com
 
 ```
 $ for ip in $(cat list.txt); do host $ip.megacorpone.com; done
-$ 
 ```
+%% brute forcing for common hostnames using a wordlist %%
+
+```
+$ for ip in $(seq 64 79); do host 167.114.21.$ip; done | grep -Ev "not found|timed out"
+```
+%% loop to scan IP addresses 167.114.21.64 through 167.114.21.79. We will filter out invalid results (using grep -Ev), showing only entries that do not contain "not found" or "timed out" %%
+
+```
+$ dnsrecon -d megacorpone.com -D ~/list.txt -t brt
+```
+%% use the -d option to specify a domain name, -D to specify a file name containing potential subdomain strings, and -t to specify the type of enumeration to perform, in this case brt for brute force %%
+
+```
+$ nslookup -type=TXT info.megacorptwo.com 192.168.50.151
+```
+%% 
