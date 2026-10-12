@@ -135,4 +135,9 @@ $ sudo nbtscan -r 192.168.50.0/24
 ```
 $ nmap -v -p 139,445 --script smb-os-discovery 192.168.50.152
 ```
-%% to 
+%% to fingerprint the smb service running %%
+
+```
+C:\>net view \\dc01 /all
+```
+%% list all shares running on dc01 from windows client machine %%
