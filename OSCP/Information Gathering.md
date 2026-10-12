@@ -123,3 +123,10 @@ PS Test-NetConnection -Port 445 192.168.50.151
 PS 1..1024 | % {echo ((New-Object Net.Sockets.TcpClient).Connect("192.168.50.151", $_)) "TCP port $_ is open"} 2>$null
 ```
 %% We start by piping the first 1024 integer into a for-loop, which assigns the incremental integer value to the $_ variable. Then, we create a Net.Sockets.TcpClient object and perform a TCP connection against the target IP on that specific port, and if the connection is successful, it prompts a log message that includes the open TCP port. %%
+
+#### SMB enumeration
+The NetBIOS service listens on TCP port 139, as well as several UDP ports. It should be noted that SMB (TCP port 445) and NetBIOS are two separate protocols. NetBIOS is an independent session layer protocol and service that allows computers on a local network to communicate with each other. While modern implementations of SMB can work without NetBIOS, NetBIOS over TCP (NBT) is required for backward compatibility and these are often enabled together.
+
+```
+$ sudo nbtscan -r 192.168.50.0/24
+```
