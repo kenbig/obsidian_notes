@@ -130,3 +130,4 @@ The NetBIOS service listens on TCP port 139, as well as several UDP ports. It sh
 ```
 $ sudo nbtscan -r 192.168.50.0/24
 ```
+%% query the NetBIOS name service for valid NetBIOS names, specifying the originating UDP port as 137 with the -r option %%
